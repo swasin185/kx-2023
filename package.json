@@ -1,0 +1,16 @@
+{
+    "name": "kx2023",
+    "version": "1.0.0",
+    "description": "KEEHIN Application Framwork 2023 (Vue3 PrimeVue Axios Express NodeJS Java JasperReport)",
+    "type": "module",
+    "scripts": {
+        "build": "npm run kxserv && npm run kxview",
+        "serve": "export LANG=en-GB.UTF-8 && cd kxserv && npm run serve",
+        "kxserv": "cd kxserv && npm run build",
+        "kxview": "cd kxview && npm run build &&  cp -p -rf -u ./dist/* ../kxserv/dist/client",
+        "kxreport": "cd kxreport && mvn package",
+        "package": "cd kxserv/dist && zip ../../dist.zip -r ."
+    },
+    "author": "วศิน เสงี่ยมกุล swasin185@gmail.com",
+    "license": "GNU"
+}

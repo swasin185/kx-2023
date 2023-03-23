@@ -1,0 +1,10 @@
+# Install nodejs
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+
+# Install Java Default JDK
+sudo apt-get install -y default-jdk-headless
+
+
+sudo apt-get install -y git;

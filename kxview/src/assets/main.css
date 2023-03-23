@@ -1,0 +1,111 @@
+@import './base.css';
+
+:root {
+  --width: 1200px;
+  --height: 800px;
+  --menuwidth: 300px;
+}
+
+#app {
+  max-width: var(--width);
+  margin: 0 auto;
+  font-weight: normal;
+  /* background-color: #0F1F3F; */
+  color: darkgray;
+}
+
+a,
+.green {
+  text-decoration: none;
+  color: hsla(160, 100%, 37%, 1);
+  transition: 0.4s;
+}
+
+@media (hover: hover) {
+  a:hover {
+    background-color: hsla(63, 100%, 37%, 0.2);
+  }
+
+  i:hover,
+  button:hover {
+    cursor: pointer;
+  }
+}
+
+@media (min-width: var(--width)) {
+  body {
+    display: flex;
+    place-items: center;
+  }
+
+  #app {
+    display: flex;
+    padding: 0 0rem;
+  }
+}
+
+.main-menu {
+  width: var(--menuwidth);
+  margin: 1em;
+  padding: 0px;
+}
+
+.main-header {
+  width: var(--width);
+  height: 75px;
+  color: white;
+  padding: 0px;
+  border-radius: 5px;
+}
+
+.main-footer {
+  font-size: 1.2em;
+  width: var(--width);
+  height: 30px;
+  margin: 0px;
+  padding: 0px;
+  color: white;
+  border-radius: 5px;
+}
+
+.main-button {
+  font-size: 1.5em;
+  width: 120px;
+  height: 55px;
+  display: inline-block;
+}
+
+.tool-button {
+  min-width: 100px;
+  max-width: 200px;
+  height: 36px;
+  margin-right: 1em;
+}
+
+.main-panel {
+  width: var(--width);
+  height: calc(var(--height) - 105px);
+  margin: 0px;
+  padding: 0px;
+  /* border: 1px solid #020408; */
+  background-color: #081020;
+  border-radius: 5px;
+}
+
+.p-inputtext {
+  width: 180px;
+  padding: 4px;
+  margin: 0px;
+}
+
+.p-calendar {
+  width: 110px;
+  padding: 0px;
+  margin: 0px;
+}
+
+.field {
+  min-height: 50px;
+  max-height: 50px;
+  padding: 5px 10px;
+}

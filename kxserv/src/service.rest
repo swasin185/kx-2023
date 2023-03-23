@@ -1,0 +1,7 @@
+POST https://192.168.1.10:8000/api/queryAllUser
+Content-Type: application/json
+
+{
+    "user": "admin",
+    "level": 9
+}

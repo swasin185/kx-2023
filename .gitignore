@@ -1,0 +1,11 @@
+# Dependency directories
+node_modules/
+.metadata/
+dist/
+*.log
+*.jasper
+package-lock.json
+kxview/package-lock.json
+kxserv/dist.zip
+dist.zip
+*.map
