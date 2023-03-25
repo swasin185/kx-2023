@@ -157,14 +157,16 @@ function exportCSV() {
         <div class="field">
             <small>{{ colMap["role"].header }}</small
             ><br />
-            <InputText
-                v-model="user.role"
-                type="text"
-                :style="{ width: colMap['role'].width }"
-                :maxlength="colMap['role'].maxlength"
-                :readonly="colMap['role'].readonly"
-            />
-            <Button class="ml-2" icon="pi pi-list" title="Lookup Role" @click="refresh" />
+            <span class="p-input-icon-right">
+                <InputText
+                    v-model="user.role"
+                    type="text"
+                    :style="{ width: colMap['role'].width }"
+                    :maxlength="colMap['role'].maxlength"
+                    :readonly="colMap['role'].readonly"
+                />
+                <i class="pi pi-search" />
+            </span>
         </div>
         <div class="field">
             <small>{{ colMap["created"].header }}</small
@@ -190,7 +192,6 @@ function exportCSV() {
         ref="dt"
         scrollable
         scroll-height="320px"
-        heigh
         show-gridlines
         striped-rows
         :value="userList"

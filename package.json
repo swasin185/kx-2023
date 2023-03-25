@@ -7,7 +7,7 @@
         "build": "npm run kxserv && npm run kxview",
         "serve": "export LANG=en-GB.UTF-8 && cd kxserv && npm run serve",
         "kxserv": "cd kxserv && npm run build",
-        "kxview": "cd kxview && npm run build &&  cp -p -rf -u ./dist/* ../kxserv/dist/client",
+        "kxview": "cd kxview && npm run build && mkdir -p ../kxserv/dist/client && cp -p -r -u ./dist/* ../kxserv/dist/client",
         "kxreport": "cd kxreport && mvn package",
         "package": "cd kxserv/dist && zip ../../dist.zip -r ."
     },

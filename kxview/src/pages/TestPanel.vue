@@ -18,7 +18,7 @@ const colorList = [
     "LightGreen",
     "LightBlue",
     "#103090",
-    "Gold"
+    "#EECC00"
 ]
 </script>
 <template>

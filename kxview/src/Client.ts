@@ -197,12 +197,7 @@ export default class Client {
     public static async checkSession(program: string) {
         await Client.service
             .post("getSession", program)
-            .then((res: AxiosResponse) => {
-                Client.setupSession(res.data)
-            }).catch(error => {
-                Client.waitting.value = false
-                console.log(error.message)
-            })
+            .then((res) => Client.setupSession(res.data))
     }
 
     private static setCurrent(program: string): void {
@@ -223,17 +218,11 @@ export default class Client {
         })
     }
 
-    public static setPanel(program: string): void {
-        Client.drawerOpen.value = false;
+    public static setPanel(program: string) {
         if (Client.getPanel() > "" && (Client.history.length == 0 ||
             program !== Client.history[Client.history.length - 1]))
             Client.history.push(Client.getPanel())
-
-        Client.checkSession(program).then(() => {
-            Client.setCurrent(program)
-        }).catch(error => {
-            Client.status.value = error.message
-        })
+        Client.setCurrent(program)
     }
 
     public static getPanel(): string {
@@ -242,7 +231,9 @@ export default class Client {
 
     public static backPanel(): void {
         if (Client.history.length == 0)
-            Client.drawerOpen.value = true
+            // recheck session when open menu
+            Client.checkSession(Client.current.value.program)
+                .then(() => Client.drawerOpen.value = true)
         else {
             Client.setCurrent(Client.history.pop() || "Login")
         }
@@ -264,7 +255,7 @@ export default class Client {
         }
     }
 
-    public static command(event: any) {
+    public static command(event: any): void {
         Client.setPanel(event.item.program)
     }
 }

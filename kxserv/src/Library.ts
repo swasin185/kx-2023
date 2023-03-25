@@ -79,7 +79,7 @@ export default class Library {
         {
             db: "kxpay",
             port: 8001,
-            color: "gold",
+            color: "#EECC00",
             comCode: "1",
             comName: "KH Salary System",
         },

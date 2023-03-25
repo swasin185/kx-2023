@@ -21,7 +21,6 @@ function pressLogin() {
         Client.service.post("logout").then((res) => {
             Client.setupSession(res.data)
             password.value = ""
-            document.getElementById("user")?.focus()
             window.location.reload()
         })
     else
@@ -86,7 +85,7 @@ function pressLogin() {
             />
             <i :class="hidePwd ? 'pi pi-eye-slash' : 'pi pi-eye'" @click="hidePwd = !hidePwd" />
         </span>
-        <h3 class="ml-1" v-else>
+        <h3 class="ml-1" v-else @click="pressLogin">
             {{ Client.getSession().name }}
         </h3>
     </div>

@@ -71,7 +71,7 @@ a,
 .main-button {
   font-size: 1.5em;
   width: 120px;
-  height: 55px;
+  height: 100%;
   display: inline-block;
 }
 
@@ -108,4 +108,26 @@ a,
   min-height: 50px;
   max-height: 50px;
   padding: 5px 10px;
+}
+
+.p-panelmenu-header-action {
+  margin: 0px;
+  padding: 0px;
+  max-height: 36px;
+}
+
+.p-menuitem {
+  background-color: #081020;
+  max-height: 36px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.sidebar {
+  width: var(--menuwidth);
+  height: var(--height);
+  position: fixed;
+  top: 5px;
+  left: 5px;
+  z-index: 9999;
 }

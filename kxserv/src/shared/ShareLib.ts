@@ -161,7 +161,7 @@ export default class ShareLib {
     }
 
     public static formatDate(d: Date): string {
-        return d.toLocaleDateString(ShareLib.locale, ShareLib.shortDateFormat)
+        return d.toLocaleDateString(ShareLib.locale, ShareLib.dateFormat)
     }
 
     public static formatDateDB(d: Date): string {
