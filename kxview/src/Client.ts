@@ -4,69 +4,14 @@ import { ref } from "vue"
 import ShareLib from "../../kxserv/src/shared/ShareLib"
 
 export default class Client {
-    private static readonly history: string[] = []
-
-    public static readonly current = ref({
-        pgmName: "",
-        program: "",
-        level: -1,
-        supervisor: "",
-        superlevel: -1
-    })
-
-    public static readonly status = ref<string>()
-    public static readonly connection = ref<Session>(new Session())
-    public static readonly waitting = ref<boolean>(false)
-    public static readonly drawerOpen = ref<boolean>(false)
     public static readonly service: AxiosInstance =
         axios.create({
             baseURL: "/api/",
             method: "post",
-            timeout: 60000, // 60 seconds
+            timeout: 60_000, // 60 seconds
             withCredentials: true,
             responseType: "json"
         })
-
-    static {
-        Date.prototype.toString = function () {
-            if (this.getHours() == 0) // only check hour for performance
-                return this.toLocaleDateString(ShareLib.locale)
-            else
-                return this.toLocaleString(ShareLib.locale)
-        }
-        Client.service.interceptors.request.use(
-            (config: InternalAxiosRequestConfig) => {
-                Client.waitting.value = true
-                return config
-            }
-        )
-        Client.service.interceptors.response.use(
-            (res: AxiosResponse) => {
-                Client.waitting.value = false
-                return res
-            },
-            (error) => {
-                console.log(error.response?.status, error.message)
-                if (error.response?.status == 401)
-                    window.location.reload()
-                return error;
-            }
-        )
-    }
-
-    // public static notify(text: string): void {
-    //     Notify.create(text)
-    // }
-
-    // public static alert(text: string): void {
-    //     Dialog.create({
-    //         dark: true,
-    //         title: "Alert",
-    //         message: text,
-    //     })
-    // }
-
-    public static params = ref<Record<string, unknown>>({})
 
     public static readonly MENU_ITEMS = ref([
         {
@@ -149,6 +94,33 @@ export default class Client {
         },
     ])
 
+    private static readonly history: string[] = []
+
+    public static readonly current = ref({
+        pgmName: "",
+        program: "",
+        level: -1,
+        supervisor: "",
+        superlevel: -1
+    })
+
+    public static readonly status = ref<string>()
+    public static readonly connection = ref<Session>(new Session())
+    public static readonly waitting = ref<boolean>(false)
+    public static readonly drawerOpen = ref<boolean>(false)
+
+    // public static notify(text: string): void {
+    //     Notify.create(text)
+    // }
+
+    // public static alert(text: string): void {
+    //     Dialog.create({
+    //         dark: true,
+    //         title: "Alert",
+    //         message: text,
+    //     })
+    // }
+
     public static readonly LEVELS = [
         { value: 0, label: "[0] Viewer" },
         { value: 1, label: "[1] Data Entry" },
@@ -219,6 +191,7 @@ export default class Client {
     }
 
     public static setPanel(program: string) {
+        Client.drawerOpen.value = false
         if (Client.getPanel() > "" && (Client.history.length == 0 ||
             program !== Client.history[Client.history.length - 1]))
             Client.history.push(Client.getPanel())
@@ -258,4 +231,32 @@ export default class Client {
     public static command(event: any): void {
         Client.setPanel(event.item.program)
     }
+
+    static {
+        Date.prototype.toString = function () {
+            if (this.getHours() == 0) // only check hour for performance
+                return this.toLocaleDateString(ShareLib.locale)
+            else
+                return this.toLocaleString(ShareLib.locale)
+        }
+        Client.service.interceptors.request.use(
+            (config: InternalAxiosRequestConfig) => {
+                Client.waitting.value = true
+                return config
+            }
+        )
+        Client.service.interceptors.response.use(
+            (res: AxiosResponse) => {
+                Client.waitting.value = false
+                return res
+            },
+            (error) => {
+                console.log(error.response?.status, error.message)
+                if (error.response?.status == 401)
+                    window.location.reload()
+                return error;
+            }
+        )
+    }
+
 }

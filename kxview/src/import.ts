@@ -6,7 +6,8 @@ const User = defineAsyncComponent(() => import('./pages/User.vue'))
 const TestPanel = defineAsyncComponent(() => import('./pages/TestPanel.vue'))
 const TestReport = defineAsyncComponent(() => import('./pages/TestReport.vue'))
 const Permission = defineAsyncComponent(() => import('./pages/Permission.vue'))
+const Mandelbrot = defineAsyncComponent(() => import('./games/Mandelbrot.vue'))
 
 export default {
-    Monty, User, TestPanel, TestReport, Permission
+    Monty, User, TestPanel, TestReport, Permission, Mandelbrot
 }
