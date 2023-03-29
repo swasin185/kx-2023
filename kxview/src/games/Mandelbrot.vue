@@ -124,7 +124,12 @@ function calculate() {
 function mandel(re: number, im: number): { x: number; y: number }[] {
     let C = new ComplexNumber(re, im)
     let Zn = new ComplexNumber(re, im)
-    let arr: { x: number; y: number }[] = []
+    let arr: { x: number; y: number }[] = [
+        {
+            x: ((re - center_real) * WIDTH) / boundary + MID_WIDTH,
+            y: ((-im - center_image) * HEIGHT) / boundary + MID_HEIGHT
+        }
+    ]
     let n: number = 0
     let re0: number = 0
     let im0: number = 0
@@ -136,12 +141,12 @@ function mandel(re: number, im: number): { x: number; y: number }[] {
     ) {
         re0 = Zn.getReal()
         im0 = Zn.getImage()
-        arr.push({
-            x: ((re0 - center_real) * WIDTH) / boundary + MID_WIDTH,
-            y: ((-im0 - center_image) * HEIGHT) / boundary + MID_HEIGHT
-        })
         Zn.power2()
         Zn.add(C)
+        arr.push({
+            x: ((Zn.getReal() - center_real) * WIDTH) / boundary + MID_WIDTH,
+            y: ((-Zn.getImage() - center_image) * HEIGHT) / boundary + MID_HEIGHT
+        })
         n++
     }
     return arr
@@ -172,7 +177,10 @@ function mapImage(y: number): number {
 }
 
 function reset() {
-    window.location.reload()
+    boxBoundary.value = "3"
+    boxReal.value = "-0.75"
+    boxImage.value = "0"
+    calculate()
 }
 
 function zoomIn() {
@@ -199,7 +207,7 @@ function paint(re: number, im: number) {
 onMounted(() => {
     canvas = document.getElementById("cpxCanvas") as HTMLCanvasElement
     ctx = canvas.getContext("2d") as CanvasRenderingContext2D
-    ctx.strokeStyle = "#FFFFFF"
+    ctx.strokeStyle = "darkgrey"
     boxReal = document.getElementById("realValue") as HTMLInputElement
     boxImage = document.getElementById("imageValue") as HTMLInputElement
     boxBoundary = document.getElementById("boundary") as HTMLInputElement

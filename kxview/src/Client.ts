@@ -136,8 +136,12 @@ export default class Client {
 
     public static setupSession(conn: Session): void {
         Client.connection.value = conn
+
+        // เปลี่ยนชื่อแท็ปหน้าต่างที่ทำงาน
         if (conn.comName)
             document.title = conn.comName
+
+        // ปรับเมนูตามสิทธิการใช้งาน
         Client.MENU_ITEMS.value.forEach(group => {
             let itemCount = 0
             group.items.forEach(item => {
@@ -147,6 +151,11 @@ export default class Client {
             })
             group.disabled = itemCount == 0
         })
+
+        // กรณีที่ session timeout ให้เปลี่ยนเคลียร์เป็นหน้าว่าง
+        if (conn.level == -1 && this.current.value.level > -1)
+            this.setCurrent("")
+
     }
 
     private static checkPermission(program?: string): number {
