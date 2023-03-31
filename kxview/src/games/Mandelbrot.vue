@@ -6,7 +6,6 @@ export default defineComponent({
 
 <script lang="ts" setup>
 import { defineComponent, onMounted } from "vue"
-import Button from "primevue/button"
 
 class ComplexNumber {
     private re: number
@@ -229,9 +228,27 @@ onMounted(() => {
     <table style="border: 0; padding: 5px">
         <tr>
             <td width="400" style="vertical-align: top; padding: 20px">
-                <Button style="height: 25px; margin: 10px" label="+" @click="zoomIn" />
-                <Button style="height: 25px; margin: 10px" label="Reset" @click="reset" />
-                <Button style="height: 25px; margin: 10px" label="-" @click="zoomOut" />
+                <input
+                    type="button"
+                    class="button"
+                    style="width: 25px; height: 25px; margin: 10px"
+                    value="+"
+                    @click="zoomIn"
+                />
+                <input
+                    type="button"
+                    class="button"
+                    style="height: 25px; margin: 10px"
+                    value="Reset"
+                    @click="reset"
+                />
+                <input
+                    type="button"
+                    class="button"
+                    style="width: 25px; height: 25px; margin: 10px"
+                    value="-"
+                    @click="zoomOut"
+                />
                 <h1>Mandelbrot Set</h1>
                 <hr />
                 <table>
