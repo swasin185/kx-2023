@@ -104,7 +104,7 @@ function exportCSV() {
         <Button class="tool-button" icon="pi pi-sync" label="Refresh" @click="refresh" />
         <Button class="tool-button" icon="pi pi-external-link" label="Export" @click="exportCSV" />
     </div>
-    <div class="p-card flex flex-column flex-wrap" style="height: 250px">
+    <div class="p-card flex flex-column flex-wrap" style="height: 200px">
         <div class="field">
             <small>{{ colMap["user"].header }}</small
             ><br />
@@ -191,7 +191,7 @@ function exportCSV() {
     <DataTable
         ref="dt"
         scrollable
-        scroll-height="320px"
+        scroll-height="400px"
         show-gridlines
         striped-rows
         :value="userList"

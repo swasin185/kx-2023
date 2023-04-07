@@ -1,37 +1,33 @@
 import { Application } from "express"
-import mysql, { Pool } from "mysql2/promise"
 import { networkInterfaces } from "os"
-import ShareLib from "./shared/ShareLib.js"
+import mysql, { Pool } from "mysql2/promise"
 import getClientIp from "get-client-ip"
+import ShareLib from "./shared/ShareLib.js"
 import Session from "./shared/Session.js"
+import ServiceFacade from "./services/ServiceFacade.js"
 
 export default class Library {
     public static readonly apiURL = "/api/"
     public static readonly servLogin = Library.apiURL + 'login'
     public static readonly servSession = Library.apiURL + 'getSession'
+
+    // serve all methods in Service dynamicly at runtime
+    public static serve(app: Application) {
+        const serviceNames = Object.getOwnPropertyNames(ServiceFacade)
+            .filter(
+                name => typeof Object.getOwnPropertyDescriptor(ServiceFacade, name)?.value == 'function')
+            .forEach(
+                name => Library.post(app, (ServiceFacade as any)[name])
+            )
+    }
+
     private static servCount = 0;
-    static {
-        // JSON date & datetime format
-        Date.prototype.toJSON = function () {
-            if (this.getHours() == 0)
-                return this.toLocaleDateString()
-            else
-                return this.toLocaleDateString() + "[" + this.toLocaleTimeString() + "]"
-        }
-    }
 
-    public static getServerIP(): any {
-        return Object.values(networkInterfaces())
-            .flat()
-            .find((i) => i?.family == "IPv4" && !i?.internal)?.address
-    }
-
-    public static post(app: Application, service: any): void {
-        console.info("POST:", service.name)
+    private static post(app: Application, service: any): void {
+        console.info("POST:", ++Library.servCount, service.name)
         app.post(Library.apiURL + service.name, async (request: any, response: any) => {
             Library.servCount++;
             const time = new Date()
-
             const conn: Session = request.session?.connect
             if (conn?.level > -1 ||
                 request.path == Library.servLogin ||
@@ -39,7 +35,6 @@ export default class Library {
                 response.json(await service(request))
             else
                 response.status(401).send("Session Unauthorized")
-
 
             Library.log(service.name, time, request, response)
         })
@@ -54,6 +49,22 @@ export default class Library {
             getClientIp(request)?.replace("::ffff:", "").padEnd(15, ' '),
             size.toFixed(3).padStart(10, ' '), "kB",
             elapse.toFixed(3).padStart(10, ' '), "sec")
+    }
+
+    static {
+        // JSON date & datetime format
+        Date.prototype.toJSON = function () {
+            if (this.getHours() == 0)
+                return this.toLocaleDateString()
+            else
+                return this.toLocaleDateString() + "[" + this.toLocaleTimeString() + "]"
+        }
+    }
+
+    public static getServerIP(): any {
+        return Object.values(networkInterfaces())
+            .flat()
+            .find((i) => i?.family == "IPv4" && !i?.internal)?.address
     }
 
     private static readonly config = {
@@ -86,6 +97,20 @@ export default class Library {
     ]
 
     public static service = Library.DBPORTS[0]
+
+    public static reset(conn: Session): void {
+        conn.counter = 0
+        conn.serverTime = Date.now()
+        conn.db = Library.service.db
+        conn.comCode = Library.service.comCode
+        conn.comName = Library.service.comName
+        conn.color = Library.service.color
+        conn.loginTime = undefined
+        conn.user = undefined
+        conn.name = undefined
+        conn.level = -1
+        conn.permissions = []
+    }
 
     public static getDbPool(): Pool {
         return Library.dbPool

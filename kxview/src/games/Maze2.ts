@@ -187,7 +187,8 @@ export default class Maze2 {
 		if (this.startArea != undefined)
 			this.paintArea(imgArr, this.startArea.i, this.startArea.j, this.startColor);
 
-		if (this.finishArea != undefined && this.found)
+		// if (this.finishArea != undefined && this.found)
+		if (this.finishArea != undefined)
 			this.paintArea(imgArr, this.finishArea.i, this.finishArea.j, this.finishColor);
 
 		this.ctx.putImageData(this.imgData, 0, 0);

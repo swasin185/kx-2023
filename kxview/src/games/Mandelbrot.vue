@@ -55,7 +55,8 @@ let MID_WIDTH: number
 let MID_HEIGHT: number
 
 const MAX_N = 500
-const PALETTE: number[][] = new Array(MAX_N)
+const PALETTE: number[][] = new Array(MAX_N + 1)
+
 for (let i = 0; i <= MAX_N; i++) {
     PALETTE[i] = new Array(3)
     PALETTE[i][0] = (i * 35) % 250
@@ -106,11 +107,12 @@ function calculate() {
                 Zn.add(C)
                 n++
             }
+            if (re0 == Zn.getReal() && im0 == Zn.getImage()) n = MAX_N
             let coor = (y * WIDTH + x) * 4
             data[coor] = PALETTE[n][0] // RED
             data[++coor] = PALETTE[n][1] // GREEN
             data[++coor] = PALETTE[n][2] // BLUE
-            data[++coor] = 255 // ALPHA
+            //data[++coor] = 255 // ALPHA
             re += step
         }
         im += step
@@ -219,7 +221,7 @@ onMounted(() => {
 
     imgData = ctx.createImageData(WIDTH, HEIGHT) // width x height
     data = imgData.data
-
+    data.fill(0xff)
     calculate()
 })
 </script>

@@ -105,8 +105,8 @@ a,
 }
 
 .field {
-  min-height: 50px;
-  max-height: 50px;
+  min-height: 35px;
+  max-height: 35px;
   padding: 5px 10px;
 }
 
@@ -121,6 +121,10 @@ a,
   max-height: 36px;
   margin: 0px;
   padding: 0px;
+}
+
+.p-toolbar {
+  padding: 10px;
 }
 
 .sidebar {

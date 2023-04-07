@@ -26,6 +26,7 @@ onMounted(() => {
     delaySlider = document.getElementById("delaySlider") as HTMLInputElement
     waiting = document.getElementById("waiting") as HTMLInputElement
     maze = new Maze2("maze2", Number(sizeInput.value))
+    genMaze()
 })
 
 function genMaze(): void {
@@ -54,18 +55,18 @@ function clickXY(event: MouseEvent): void {
             type="number"
             id="sizeInput"
             min="10"
-            max="660"
+            max="330"
             step="10"
-            value="500"
+            value="100"
             style="width: 50px; float: right; text-align: right"
         />
         <input
             type="range"
             id="sizeSlider"
             min="10"
-            max="660"
+            max="330"
             step="10"
-            value="500"
+            value="100"
             @input="sizeInput.value = sizeSlider.value"
         />
         <label id="connectLabel" for="connInput">Connect:</label>
@@ -95,7 +96,7 @@ function clickXY(event: MouseEvent): void {
             min="0"
             max="100"
             step="1"
-            value="10"
+            value="5"
             style="width: 50px; float: right; text-align: right"
         />
         <input
@@ -104,30 +105,31 @@ function clickXY(event: MouseEvent): void {
             min="0"
             max="100"
             step="1"
-            value="10"
+            value="5"
             @input="delayInput.value = delaySlider.value"
         />
         <br />
-        <label for="wait">waiting</label>
+        <label for="wait">waiting </label>
         <input type="checkbox" id="waiting" checked="true" />
         <hr />
-        <input type="button" class="button" id="generate" value="Generate" @click="genMaze()" />
+        <input type="button" class="button" id="new" value="New" @click="genMaze()" />
         <br />
-        <input type="button" class="button" id="reset" value="Reset" @click="maze.reset()" />
-        <br />
+        <!-- <input type="button" class="button" id="reset" value="Reset" @click="maze.reset()" />
+        <br /> -->
         <input
+            id="start"
             type="button"
             class="button"
-            value="Run"
+            value="Start"
             @click="maze.solveMaze(Number(delayInput.value), waiting.checked)"
         />
         <br />
     </div>
     <canvas
         id="maze2"
-        width="800"
-        height="600"
-        style="background-color: darkslategrey; color: white; margin-top: 20px"
+        width="660"
+        height="660"
+        style="background: #800402; color: white; margin-top: 20px"
         @click="clickXY"
     ></canvas>
 </template>

@@ -1,11 +1,10 @@
 // Server Entry Point เริ่มต้นทำงานเซิฟเวอร์
 import express from 'express'
 import session from 'express-session'
-import Library from './Library.js'
 import { Response } from 'express'
 import https from 'https'
 import fs from 'fs'
-import Login from './services/Login.js'
+import Library from './Library.js'
 
 console.log("LANG", process.env.LANG, new Date().toLocaleString())
 
@@ -41,7 +40,7 @@ app.use(express.static(clientDir))
 
 app.get("/", (res: Response) => res.sendFile(indexhtml))
 
-Login.serve(app)
+Library.serve(app)
 
 // openssl genrsa -out key.pem
 // openssl req -new -key key.pem -out csr.pem
