@@ -1,17 +1,15 @@
 // Server Entry Point เริ่มต้นทำงานเซิฟเวอร์
 import express from 'express'
 import session from 'express-session'
-import { Response } from 'express'
 import https from 'https'
 import fs from 'fs'
 import Library from './Library.js'
+import Service from './Service.js'
 
 console.log("LANG", process.env.LANG, new Date().toLocaleString())
 
 const workDB = process.env.APIHOST || "kxtest"
 // const nodeEnv = process.env.NODE_ENV || 'dev'
-const clientDir = process.cwd() + "/client/"
-const indexhtml = clientDir + "index.html"
 const app = express()
 
 Library.setDB(workDB)
@@ -36,11 +34,7 @@ app.use(express.json()) // Express >= 4.16  no need body-parser
 //     next()
 // })
 
-app.use(express.static(clientDir))
-
-app.get("/", (res: Response) => res.sendFile(indexhtml))
-
-Library.serve(app)
+Service.main(app)
 
 // openssl genrsa -out key.pem
 // openssl req -new -key key.pem -out csr.pem

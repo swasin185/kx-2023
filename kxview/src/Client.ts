@@ -177,7 +177,7 @@ export default class Client {
 
     public static async checkSession(program: string) {
         await Client.service
-            .post("getSession", program)
+            .post("session", program)
             .then((res) => Client.setupSession(res.data))
     }
 

@@ -83,15 +83,10 @@ columns.map((item) => (colMap[item.field] = item))
 onActivated(() => nextTick().then(refresh))
 
 function refresh() {
-    Client.service
-        .post("queryAllUser", {
-            user: Client.getSession().user,
-            level: Client.getSession().level
-        })
-        .then((res) => {
-            userList.value = res.data
-            user.value = userList.value[0]
-        })
+    Client.service.post("userQuery").then((res) => {
+        userList.value = res.data
+        user.value = userList.value[0]
+    })
 }
 
 function exportCSV() {

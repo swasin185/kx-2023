@@ -1,56 +1,9 @@
-import { Application } from "express"
 import { networkInterfaces } from "os"
 import mysql, { Pool } from "mysql2/promise"
-import getClientIp from "get-client-ip"
 import ShareLib from "./shared/ShareLib.js"
 import Session from "./shared/Session.js"
-import ServiceFacade from "./services/ServiceFacade.js"
 
 export default class Library {
-    public static readonly apiURL = "/api/"
-    public static readonly servLogin = Library.apiURL + 'login'
-    public static readonly servSession = Library.apiURL + 'getSession'
-
-    // serve all methods in Service dynamicly at runtime
-    public static serve(app: Application) {
-        const serviceNames = Object.getOwnPropertyNames(ServiceFacade)
-            .filter(
-                name => typeof Object.getOwnPropertyDescriptor(ServiceFacade, name)?.value == 'function')
-            .forEach(
-                name => Library.post(app, (ServiceFacade as any)[name])
-            )
-    }
-
-    private static servCount = 0;
-
-    private static post(app: Application, service: any): void {
-        console.info("POST:", ++Library.servCount, service.name)
-        app.post(Library.apiURL + service.name, async (request: any, response: any) => {
-            Library.servCount++;
-            const time = new Date()
-            const conn: Session = request.session?.connect
-            if (conn?.level > -1 ||
-                request.path == Library.servLogin ||
-                request.path == Library.servSession)
-                response.json(await service(request))
-            else
-                response.status(401).send("Session Unauthorized")
-
-            Library.log(service.name, time, request, response)
-        })
-    }
-
-    private static log(servName: string, time: Date, request: any, response: any) {
-        const size = response.getHeader('Content-Length') / 1000
-        const elapse = (Date.now() - time.getTime()) / 1000
-        console.log(Library.servCount.toString().padStart(5, ' '),
-            time.toLocaleTimeString(),
-            servName.padEnd(20, ' '),
-            getClientIp(request)?.replace("::ffff:", "").padEnd(15, ' '),
-            size.toFixed(3).padStart(10, ' '), "kB",
-            elapse.toFixed(3).padStart(10, ' '), "sec")
-    }
-
     static {
         // JSON date & datetime format
         Date.prototype.toJSON = function () {
