@@ -45,7 +45,7 @@ export default class ShareLib {
         const d = new Date("2024-02-29")
         // const d = new Date(2020,1,29, 7, 0, 0)
         console.assert(ShareLib.formatDateDB(d) == "2024-02-29", ShareLib.formatDateDB(d) + " formatDateDB() Error!")
-        console.assert(ShareLib.formatDate(d) == "29/02/24", ShareLib.formatDate(d) + " formatDate() Error!")
+        console.assert(ShareLib.formatDate(d) == "29/02/2024", ShareLib.formatDate(d) + " formatDate() Error!")
         console.assert(
             ShareLib.formatDateTime(d) == "29/02/24[07:00:00]",
             ShareLib.formatDateTime(d) + " formatDateTime() Error!"

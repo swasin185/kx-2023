@@ -88,4 +88,9 @@ export default class BaseImpl {
         const [[result]]: any = await Library.getDbPool().execute("select sleep(?)", [delay])
         return result
     }
+
+    static async serverMemory(req: any) {
+        const memoryUsage = process.memoryUsage()
+        return memoryUsage
+    }
 }

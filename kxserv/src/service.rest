@@ -1,4 +1,4 @@
-POST https://192.168.1.10:8000/api/queryAllUser
+POST https://192.168.1.10:8000/api/serverMemory
 Content-Type: application/json
 
 {

@@ -21,6 +21,9 @@ export default class AdminImpl {
     }
 
     static async userInsert(req: any) { }
+
     static async userUpdate(req: any) { }
+
     static async userDelete(req: any) { }
+
 }

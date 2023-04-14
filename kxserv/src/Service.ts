@@ -19,13 +19,11 @@ export default class Service {
         app.get("/", (res: Response) => res.sendFile("index.html"))
         app.get(Service.apiURL,
             (request: Request, response: Response) => response.send(Service.serviceList))
-
-        Service.implements.forEach(
-            (impl) => Service.serve(app, impl))
-
+        Service.implements.forEach((impl) => Service.serve(app, impl))
         app._router.stack.forEach((middleware: any) => {
             if (middleware.route)
-                Service.serviceList.push(Object.keys(middleware.route.methods).toString() + ":" + middleware.route.path)
+                Service.serviceList.push(Object.keys(middleware.route.methods).toString()
+                    + ":" + middleware.route.path)
         })
         Service.serviceList.sort()
         console.log("services", Service.serviceList.length, Service.serviceList)

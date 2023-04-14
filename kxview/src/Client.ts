@@ -17,9 +17,10 @@ export default class Client {
         {
             label: "1 Setting", icon: "pi pi pi-cog", disabled: false,
             items: [
+                { program: "ServerStatus", label: "1.0 สถานะเซิฟเวอร์", icon: "pi pi-server", command: Client.command, visible: false },
                 { program: "User", label: "1.1 ผู้ใช้", icon: "pi pi-user-edit", command: Client.command, visible: false },
                 { program: "Permission", label: "1.2 สิทธิการใช้งาน", icon: "pi pi-lock-open", command: Client.command, visible: false },
-                // { separator: true, visible: false, default: false },
+                { separator: true, visible: false, default: false },
                 { program: "Company", label: "1.3 บริษัท", icon: "pi pi-home", command: Client.command, visible: false },
                 { program: "Employee", label: "1.4 พนักงาน", icon: "pi pi-users", command: Client.command, visible: false },
                 { program: "Payment", label: "1.5 การจ่ายเงิน", icon: "pi pi-wallet", command: Client.command, visible: false },
