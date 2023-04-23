@@ -1,18 +1,5 @@
+use payroll;
 set foreign_key_checks = 0;
-
-drop user if exists 'kxreport'@'%';
-create user 'kxreport'@'%' identified by 'kxreport';
-grant select, execute on *.* to 'kxreport'@'%';
-
-drop user if exists 'kxserv'@'%';
-create user 'kxserv'@'%' identified by 'kxserv';
-grant select, execute, insert, delete, update on *.* to 'kxserv'@'%';
-
-drop database if exists kxtest;
-create database kxtest;
--- default character set 'tis620' default collate 'tis620_thai_ci';
-
-use kxtest;
 
 -- kxview/src/Library.ts
 -- drop table if exists kxlevel;
@@ -73,21 +60,22 @@ create table company (
   email1        varchar(30) comment 'email 1',
   email2        varchar(30) comment 'email 2',
   email3        varchar(30) comment 'email 3',
+  yr            smallint unsigned default year(curdate()) comment "ปีปัจจุบันที่กำลังทำงาน",
+  mo            tinyint unsigned default month(curdate()) comment "เดือนปัจจุบันที่กำลังทำงาน",
   primary key (comCode)
 ) comment = 'บริษัท-ข้อมูลของแต่ละบริษัท';
-
-insert into company values ('01', "บริษัทเริ่มต้นจำกัด");
-insert into company values ('02', "บริษัทที่สองจำกัด");
+-- insert into company(comCode, comName) values ('01', "บริษัทเริ่มต้นจำกัด");
+-- insert into company(comCode, comName) values ('02', "บริษัทที่สองจำกัด");
 
 drop table if exists kxlog;
 create table kxlog (
   logNr         integer unsigned auto_increment,
   logTime       timestamp not null,
-  logType       varchar(16) comment 'insert delete update query rollback login logfail execute',   
+  logType       varchar(8) comment 'insert delete update query rollback login logfail execute',   
   user          varchar(16) not null comment 'user ที่ส่งคำสั่งทำงาน',
   program       varchar(16) comment 'ชื่อโปรแกรม',
   tableName     varchar(20) comment 'ไฟล์ ที่มีผลกระทบ',
-  jsonData      varchar(300) comment 'ข้อมูลสำคัญก่อนการเปลี่ยนแปลง',
+  logData       varchar(300) comment 'ข้อมูลสำคัญก่อนการเปลี่ยนแปลง',
   primary key (logNr)
 ) comment = 'บันทึกการทำงาน';
 

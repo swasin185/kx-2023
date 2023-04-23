@@ -1,3 +1,4 @@
+set foreign_key_checks = 0;
 drop table if exists deduction;
 create table deduction (
     costPercent    decimal(4,2) comment 'หักค่าใช้จ่าย %',
@@ -7,6 +8,7 @@ create table deduction (
     deductChild    mediumint unsigned comment 'ค่าลดหย่อนบุตรธิดา',
     deductChildEdu mediumint unsigned comment 'ค่าลดหย่อนบุตรธิดา กำลังศึกษา'
 ) comment = 'ประเภทเงินหักลดหย่อน ของกรมสรรพากร';
+insert into deduction values (50.0, 100000, 60000, 60000, 30000, 30000);
 
 drop table if exists employee;
 create table employee (
@@ -15,8 +17,8 @@ create table employee (
     taxid          varchar(17) comment "เลขประจำตัวผู้เสียภาษี เลขบัตรประชาชน",
     prefix         varchar(16) comment "คำนำหน้าชื่อ",
     name           varchar(16) comment "ชื่อจริง",
-    surname        varchar(20) comment "นามสกุล",
-    nickname       varchar(20) comment "ชื่อเล่น",
+    surName        varchar(20) comment "นามสกุล",
+    nickName       varchar(20) comment "ชื่อเล่น",
     birthDate      date comment "วันเดือนปีเกิด",
     department     varchar(20) comment "แผนก ฝ่าย",
     beginDate      date comment "วันที่เริ่มทำงาน",
@@ -53,7 +55,7 @@ drop table if exists taxrate;
 create table taxrate (
 	total          mediumint unsigned comment "เงินได้ไม่เกิน",
 	rate           decimal(4,2) comment "อัตราภาษีเปอร์เซ็น",
-	primary key (income)
+	primary key (total)
 ) comment = "อัตราการคำนวณภาษี";
 insert into taxrate values ( 150000,  0.0);
 insert into taxrate values ( 300000,  5.0);
@@ -79,12 +81,14 @@ create table salary (
 drop table if exists payroll;
 create table payroll (
     yr            smallint unsigned comment "ปี",
-    mn            tinyint unsigned comment "เดือน",
+    mo            tinyint unsigned comment "เดือน",
     comCode       varchar(2),
     empCode       smallint unsigned,
     inCode        varchar(2),
     value         decimal(9,2) comment "จำนวนเงิน",
     foreign key (comCode, empCode) references employee(comCode, empCode),
     foreign key (inCode) references incometype(inCode),
-    primary key (yr, mn, comCode, empCode, inCode)
+    primary key (yr, mo, comCode, empCode, inCode)
 ) comment = "รายการจ่ายเงินเดือนในแต่ละเดือน";
+
+set foreign_key_checks = 1;
