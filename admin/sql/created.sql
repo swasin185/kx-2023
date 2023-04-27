@@ -1,4 +1,7 @@
+drop database payroll;
+create database payroll;
 use payroll;
+
 set foreign_key_checks = 0;
 
 -- kxview/src/Library.ts
@@ -60,8 +63,8 @@ create table company (
   email1        varchar(30) comment 'email 1',
   email2        varchar(30) comment 'email 2',
   email3        varchar(30) comment 'email 3',
-  yr            smallint unsigned default year(curdate()) comment "ปีปัจจุบันที่กำลังทำงาน",
-  mo            tinyint unsigned default month(curdate()) comment "เดือนปัจจุบันที่กำลังทำงาน",
+  yr             smallint unsigned default year(curdate()) comment "ปีปัจจุบันที่กำลังทำงาน",
+  mo             tinyint unsigned default month(curdate()) comment "เดือนปัจจุบันที่กำลังทำงาน",
   primary key (comCode)
 ) comment = 'บริษัท-ข้อมูลของแต่ละบริษัท';
 -- insert into company(comCode, comName) values ('01', "บริษัทเริ่มต้นจำกัด");

@@ -12,8 +12,5 @@
         "package": "cd kxserv/dist && zip ../../dist.zip -r ."
     },
     "author": "วศิน เสงี่ยมกุล swasin185@gmail.com",
-    "license": "GNU",
-    "dependencies": {
-        "derby": "^2.0.3"
-    }
+    "license": "GNU"
 }
