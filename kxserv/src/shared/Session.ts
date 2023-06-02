@@ -1,5 +1,3 @@
-import Permission from "./Permission"
-
 export default class Session {
     counter: number = 0
     serverTime?: number
@@ -11,5 +9,5 @@ export default class Session {
     user?: string
     name?: string
     level: number = -1
-    permissions: Permission[] = []
+    permission: Record<string, number> = {}
 }

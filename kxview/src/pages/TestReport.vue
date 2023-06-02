@@ -10,20 +10,16 @@ import Button from "primevue/button"
 import kxreport from "../KxReport"
 function callAPI(): void {
     const p: Record<string, string> = {
-        //app: "",
-        //db: "kxtest",
         report: "00-000",
-        //comCode: "3",
-        //comName: "",
-        fromDate: "01/01/2021",
-        toDate: "31/12/2021",
+        fromDate: "2023-01-15",
+        toDate: "2023-04-15",
         fromId: "",
         toId: ""
     }
     kxreport.openJS(p)
 }
 function openURL(): void {
-    kxreport.open("report=00-000&db=kxtest&comCode=3&fromDate=01/01/2021&toDate=31/12/2021")
+    kxreport.open("report=00-000&db=kxtest&comCode=3&fromDate=2023-01-20&toDate=2023-04-15")
 }
 </script>
 

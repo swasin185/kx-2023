@@ -1,16 +1,13 @@
 import { networkInterfaces } from "os"
-import mysql, { Pool } from "mysql2/promise"
+import mysql, { Pool } from "mariadb"
 import ShareLib from "./shared/ShareLib.js"
 import Session from "./shared/Session.js"
 
 export default class Library {
     static {
-        // JSON date & datetime format
+        // JSON date & datetime format use inline if for performance
         Date.prototype.toJSON = function () {
-            if (this.getHours() == 0)
-                return this.toLocaleDateString()
-            else
-                return this.toLocaleDateString() + "[" + this.toLocaleTimeString() + "]"
+            return (this.getHours() == 0 ? this.toLocaleDateString() : this.toLocaleString())
         }
     }
 
@@ -41,11 +38,11 @@ export default class Library {
             comName: "บริษัท KX2023 ทดสอบ จำกัด",
         },
         {
-            db: "kxpay",
+            db: "payroll",
             port: 8001,
             color: "#EECC00",
-            comCode: "1",
-            comName: "KH Salary System",
+            comCode: "01",
+            comName: "KH Payroll System",
         },
     ]
 
@@ -62,7 +59,7 @@ export default class Library {
         conn.user = undefined
         conn.name = undefined
         conn.level = -1
-        conn.permissions = []
+        conn.permission = {}
     }
 
     public static getDbPool(): Pool {
@@ -75,12 +72,10 @@ export default class Library {
                 Library.service = item
                 break
             }
-        if (Library.service.db)
-            Library.config.database = Library.service.db
-        if (Library.dbPool) Library.dbPool.end()
+        // if (Library.dbPool) Library.dbPool.end()
+        Library.config.database = Library.service.db
         Library.dbPool = mysql.createPool(Library.config)
-        Library.dbPool.execute("select * from kxuser where user=?", ["admin"]).then(([[results]]: any) => {
-            console.assert(results.user == "admin", "setDB Error!")
-        })
+        Library.dbPool.query("select * from kxuser where user=?", ["admin"]).
+            then(([res]) => console.assert(res.user == "admin", "setDB Error!"))
     }
 }

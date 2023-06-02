@@ -3,7 +3,23 @@ import axios, { type AxiosInstance, type InternalAxiosRequestConfig, type AxiosR
 import { ref } from "vue"
 import ShareLib from "../../kxserv/src/shared/ShareLib"
 
+export enum Mode { Close, Open, Update, Insert }
+
 export default class Client {
+    public static readonly LEVELS = [
+        { value: -1, label: "" },
+        { value: 0, label: "[0] Viewer" },
+        { value: 1, label: "[1] Data Entry" },
+        { value: 2, label: "[2] Officer" },
+        { value: 3, label: "[3] Senior Officer" },
+        { value: 4, label: "[4] Supervisor" },
+        { value: 5, label: "[5] Manager" },
+        { value: 6, label: "[6] Executive" },
+        { value: 7, label: "[7] Administrator" },
+        { value: 8, label: "[8] Developer" },
+        { value: 9, label: "[9] Creator" }
+    ]
+
     public static readonly service: AxiosInstance =
         axios.create({
             baseURL: "/api/",
@@ -109,6 +125,7 @@ export default class Client {
     public static readonly connection = ref<Session>(new Session())
     public static readonly waitting = ref<boolean>(false)
     public static readonly drawerOpen = ref<boolean>(false)
+    public static readonly dateInputFormat = "yy-mm-dd"
 
     // public static notify(text: string): void {
     //     Notify.create(text)
@@ -122,22 +139,8 @@ export default class Client {
     //     })
     // }
 
-    public static readonly LEVELS = [
-        { value: 0, label: "[0] Viewer" },
-        { value: 1, label: "[1] Data Entry" },
-        { value: 2, label: "[2] Officer" },
-        { value: 3, label: "[3] Senior Officer" },
-        { value: 4, label: "[4] Supervisor" },
-        { value: 5, label: "[5] Manager" },
-        { value: 6, label: "[6] Executive" },
-        { value: 7, label: "[7] Administrator" },
-        { value: 8, label: "[8] Developer" },
-        { value: 9, label: "[9] Creator" }
-    ]
-
     public static setupSession(conn: Session): void {
         Client.connection.value = conn
-
         // เปลี่ยนชื่อแท็ปหน้าต่างที่ทำงาน
         if (conn.comName)
             document.title = conn.comName
@@ -156,20 +159,16 @@ export default class Client {
         // กรณีที่ session timeout ให้เปลี่ยนเคลียร์เป็นหน้าว่าง
         if (conn.level == -1 && this.current.value.level > -1)
             this.setCurrent("")
-
     }
 
     private static checkPermission(program?: string): number {
-        if (Client.connection.value.level > -1) {
-            const perm = Client.connection.value.permissions
-            if (Client.connection.value.level >= 7)
-                return Client.connection.value.level
-            else
-                for (let i = 0; i < perm.length; i++)
-                    if (program == perm[i].program)
-                        return perm[i].level
-        }
-        return -1
+        const conn = Client.connection.value
+        let lev = conn.permission[program as string]
+        if (conn.level <= 6) {
+            if (!lev) lev = -1
+        } else
+            lev = conn.level
+        return lev
     }
 
     public static getSession(): Session {
@@ -214,7 +213,6 @@ export default class Client {
 
     public static backPanel(): void {
         if (Client.history.length == 0)
-            // recheck session when open menu
             Client.checkSession(Client.current.value.program)
                 .then(() => Client.drawerOpen.value = true)
         else {
@@ -261,7 +259,7 @@ export default class Client {
                 return res
             },
             (error) => {
-                console.log(error.response?.status, error.message)
+                console.error(error.response?.status, error.message)
                 if (error.response?.status == 401)
                     window.location.reload()
                 return error;

@@ -1,9 +1,11 @@
 import VatItem from "./VatItem"
 
+export type Nullable<T> = T | null;
+
 export default class ShareLib {
     public static readonly HOST: string = "192.168.1.10"
-    public static readonly locale = "en-GB" // dd/MM/yyyy
-    public static readonly fr_ca = "fr-CA" // yyyy-MM-dd
+    public static readonly locale = "sv-SE" // en-GB: dd/MM/yyyy
+    public static readonly yyyy_mm_dd = "sv-SE"
     public static readonly VAT = 7
     public static readonly VATDC = Math.floor(1E5 - 1E7 / (100 + ShareLib.VAT)) / 1E3;
     public static dateRegex = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(\.\d{1,3})?)Z$/
@@ -165,7 +167,7 @@ export default class ShareLib {
     }
 
     public static formatDateDB(d: Date): string {
-        return d.toLocaleDateString(ShareLib.fr_ca, ShareLib.dateFormat)
+        return d.toLocaleDateString(ShareLib.yyyy_mm_dd, ShareLib.dateFormat)
     }
 
     public static formatTime(d: Date): string {

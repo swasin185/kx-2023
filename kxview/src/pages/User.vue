@@ -5,8 +5,8 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { ref, onActivated, nextTick } from "vue"
-import Client from "../Client"
+import { ref, onActivated } from "vue"
+import Client, { Mode } from "../Client"
 import KxUser from "../../../kxserv/src/shared/KxUser"
 import InputText from "primevue/inputtext"
 import DataTable from "primevue/datatable"
@@ -14,10 +14,12 @@ import Calendar from "primevue/calendar"
 import Column from "primevue/column"
 import Dropdown from "primevue/dropdown"
 import Button from "primevue/button"
+import { useConfirm } from "primevue/useconfirm"
 
+const confirm = useConfirm()
 const dt = ref<any>(null)
-const user = ref(new KxUser())
-const userList = ref([])
+const user = ref<KxUser>(new KxUser())
+const userList = ref<KxUser[]>([])
 const columns = [
     {
         field: "user",
@@ -65,29 +67,85 @@ const columns = [
         width: "100px",
         readonly: false,
         maxlength: 0,
-        type: "text"
+        type: "date"
+    },
+    {
+        field: "stoped",
+        header: "ลาออก",
+        width: "100px",
+        readonly: false,
+        maxlength: 0,
+        type: "date"
     },
     {
         field: "passwdTime",
         header: "วันที่รหัสผ่าน",
-        width: "200px",
+        width: "180px",
         readonly: true,
         maxlength: 0
     }
 ]
 
 const colMap: any = {}
-columns.map((item) => (colMap[item.field] = item))
+columns.forEach((item) => (colMap[item.field] = item))
 
 // proper way to fetch data after render UI + autofocus
-onActivated(() => nextTick().then(refresh))
+// onActivated(() => nextTick()).then(refresh))
+onActivated(refresh)
+
+var level = -1
+var mode: Mode = Mode.Close
+var selectedIdx = 0
 
 function refresh() {
+    level = Client.getSession().permission["User"]
     Client.service.post("userQuery").then((res) => {
+        mode = Mode.Open
         userList.value = res.data
         user.value = userList.value[0]
     })
 }
+
+function save(event: any) {
+    confirm.require({
+        target: event.currentTarget,
+        message: "ยืนยันการบันทึกข้อมูลผู้ใช้หรือไม่ ?",
+        icon: "pi pi-question",
+        defaultFocus: "reject",
+        accept: () => {
+            Client.service.post("userUpdate", user.value).then(refresh)
+        }
+    })
+}
+
+function onSelect(e: any) {
+    mode = Mode.Open
+    selectedIdx = e.index
+    console.log("Selected Index", selectedIdx)
+}
+
+function newUser() {
+    mode = Mode.Insert
+    user.value = new KxUser()
+    // userList.value.splice(curIdx, 0, user.value)
+}
+
+function remove(event: any) {
+    if (user.value.user === Client.getSession().user) return
+    confirm.require({
+        target: event.currentTarget,
+        message: "ยืนยันการลบผู้ใช้หรือไม่ ?",
+        icon: "pi pi-prime",
+        defaultFocus: "reject",
+        accept: () => {
+            Client.service.post("userDelete", { user: user.value.user }).then(refresh)
+        }
+    })
+}
+
+function chgPwd() {}
+
+function chgPwd2() {}
 
 function exportCSV() {
     dt.value.exportCSV()
@@ -96,49 +154,95 @@ function exportCSV() {
 
 <template>
     <div class="p-toolbar">
-        <Button class="tool-button" icon="pi pi-sync" label="Refresh" @click="refresh" />
-        <Button class="tool-button" icon="pi pi-external-link" label="Export" @click="exportCSV" />
+        <Button
+            class="tool-button"
+            icon="pi pi-external-link"
+            label="Export"
+            @click="exportCSV"
+            title="ส่งออกไฟล์ข้อมูล"
+            :disabled="level <= 0 || mode !== Mode.Open"
+        />
+        <Button
+            class="tool-button"
+            icon="pi pi-save"
+            label="บันทึก"
+            @click="save"
+            title="บันทึกการแก้ไข"
+            :disabled="level <= 0 || mode === Mode.Open"
+        />
+        <Button
+            class="tool-button"
+            icon="pi pi-user-plus"
+            label="สร้าง"
+            @click="newUser"
+            title="สร้างผู้ใช้ใหม่"
+            :disabled="level <= 7 || mode !== Mode.Open"
+        />
+        <Button
+            class="tool-button"
+            icon="pi pi-ban"
+            label="ลบผู้ใช้"
+            @click="remove"
+            title="ลบผู้ใช้"
+            :disabled="level <= 7 || mode !== Mode.Open"
+        />
+        <Button
+            class="tool-button"
+            icon="pi pi-key"
+            label="รหัสผ่าน"
+            @click="chgPwd"
+            title="เปลี่ยนรหัสผ่าน"
+            :disabled="level <= 0 || mode !== Mode.Open"
+        />
+        <Button
+            class="tool-button"
+            icon="pi pi-lock-open"
+            label="รหัสผ่าน 2"
+            @click="chgPwd2"
+            title="เปลี่ยนรหัสผ่านซุปเปอร์ไวเซอร์"
+            :disabled="level <= 4 || mode !== Mode.Open"
+        />
     </div>
-    <div class="p-card flex flex-column flex-wrap" style="height: 200px">
+    <div class="p-card flex flex-column flex-wrap" style="height: 280px">
         <div class="field">
-            <small>{{ colMap["user"].header }}</small
-            ><br />
+            <small>{{ colMap["user"].header }}</small>
+            <br />
             <InputText
                 v-model="user.user"
                 type="text"
                 :style="{ width: colMap['user'].width }"
                 :maxlength="colMap['user'].maxlength"
-                :readonly="colMap['user'].readonly"
+                :readonly="(colMap['user'].readonly && mode !== Mode.Insert) || level <= 0"
                 required
                 autofocus
             />
         </div>
         <div class="field">
-            <small>{{ colMap["name"].header }}</small
-            ><br />
+            <small>{{ colMap["name"].header }}</small>
+            <br />
             <InputText
                 v-model="user.name"
                 type="text"
                 :style="{ width: colMap['name'].width }"
                 :maxlength="colMap['name'].maxlength"
-                :readonly="colMap['name'].readonly"
+                :readonly="colMap['name'].readonly || level <= 5"
                 required
             />
         </div>
         <div class="field">
-            <small>{{ colMap["descript"].header }}</small
-            ><br />
+            <small>{{ colMap["descript"].header }}</small>
+            <br />
             <InputText
                 v-model="user.descript"
                 type="text"
                 :style="{ width: colMap['descript'].width }"
                 :maxlength="colMap['descript'].maxlength"
-                :readonly="colMap['descript'].readonly"
+                :readonly="colMap['descript'].readonly || level <= 5"
             />
         </div>
         <div class="field">
-            <small>{{ colMap["level"].header }}</small
-            ><br />
+            <small>{{ colMap["level"].header }}</small>
+            <br />
             <Dropdown
                 v-model="user.level"
                 :options="Client.LEVELS"
@@ -146,55 +250,70 @@ function exportCSV() {
                 optionValue="value"
                 data-key="value"
                 :style="{ width: colMap['level'].width }"
-                :readonly="colMap['level'].readonly"
+                :readonly="colMap['level'].readonly || level < 7"
             />
         </div>
         <div class="field">
-            <small>{{ colMap["role"].header }}</small
-            ><br />
+            <small>{{ colMap["role"].header }}</small>
+            <br />
             <span class="p-input-icon-right">
                 <InputText
                     v-model="user.role"
                     type="text"
                     :style="{ width: colMap['role'].width }"
                     :maxlength="colMap['role'].maxlength"
-                    :readonly="colMap['role'].readonly"
+                    :readonly="colMap['role'].readonly || level < 7"
                 />
                 <i class="pi pi-search" />
             </span>
         </div>
         <div class="field">
-            <small>{{ colMap["created"].header }}</small
-            ><br />
+            <small>{{ colMap["created"].header }}</small>
+            <br />
             <Calendar
                 v-model="user.created"
-                date-format="dd/mm/yy"
-                :readonly="colMap['created'].readonly"
+                :date-format="Client.dateInputFormat"
+                :readonly="colMap['created'].readonly || level <= 0"
             />
         </div>
         <div class="field">
-            <small>{{ colMap["passwdTime"].header }}</small
-            ><br />
+            <small>{{ colMap["passwdTime"].header }}</small>
+            <br />
             <InputText
                 v-model="user.passwdTime"
                 type="text"
                 :style="{ width: colMap['passwdTime'].width }"
-                :readonly="colMap['passwdTime'].readonly"
+                :readonly="colMap['passwdTime'].readonly || level <= 0"
+            />
+        </div>
+        <div class="field">
+            <small>{{ colMap["stoped"].header }}</small>
+            <br />
+            <Calendar
+                v-model="user.stoped"
+                :date-format="Client.dateInputFormat"
+                :readonly="colMap['stoped'].readonly || level <= 7"
             />
         </div>
     </div>
     <DataTable
         ref="dt"
         scrollable
-        scroll-height="400px"
+        scroll-height="300px"
+        selection-mode="single"
         show-gridlines
         striped-rows
         :value="userList"
         dataKey="user"
         v-model:selection="user"
-        selection-mode="single"
+        v-on:row-select="onSelect"
     >
-        <Column header="#" class="m-0 p-1 text-right">
+        <Column
+            header="ที่"
+            class="m-0 p-1 text-right"
+            header-style="text-decoration: underline"
+            style="min-width: 30px"
+        >
             <template #body="slotProps">
                 {{ slotProps.index + 1 }}
             </template>
@@ -208,13 +327,13 @@ function exportCSV() {
             :style="{
                 margin: '0px',
                 padding: '2px',
+                overflow: 'hidden',
                 'padding-left': '5px',
                 'padding-right': '5px',
                 'min-width': col.width,
                 'max-width': col.width,
                 'white-space': 'nowrap',
                 'text-overflow': 'ellipsis',
-                overflow: 'hidden',
                 'text-align':
                     col.type == 'number' ? 'right' : col.type == 'code' ? 'center' : 'left'
             }"

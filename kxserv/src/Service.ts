@@ -15,21 +15,22 @@ export default class Service {
     private static servCount = 0
 
     public static main(app: Application) {
-        app.use(express.static(process.cwd() + "/client", { maxAge: 86_400_000 }))
+        app.use(express.static(process.cwd() + "/client", { maxAge: 43_200_000 }))
         app.get("/", (res: Response) => res.sendFile("index.html"))
         app.get(Service.apiURL,
             (request: Request, response: Response) => response.send(Service.serviceList))
-        Service.implements.forEach((impl) => Service.serve(app, impl))
+        Service.implements.forEach((impl: any) => Service.serve(app, impl))
         app._router.stack.forEach((middleware: any) => {
-            if (middleware.route)
+            if (middleware?.route)
                 Service.serviceList.push(Object.keys(middleware.route.methods).toString()
                     + ":" + middleware.route.path)
         })
         Service.serviceList.sort()
-        console.log("services", Service.serviceList.length, Service.serviceList)
+        let i = 0
+        Service.serviceList.forEach(serv => console.info((++i).toString().padStart(4), serv))
     }
 
-    private static serve(app: Application, servImpl: any) {
+    private static serve(app: Application, servImpl: any): void {
         const serviceNames = Object.getOwnPropertyNames(servImpl)
             .filter(
                 name => typeof Object.getOwnPropertyDescriptor(servImpl, name)?.value == 'function')
@@ -48,7 +49,7 @@ export default class Service {
             Service.servCount++;
             const time = new Date()
             const conn: Session = (request.session as any).connect
-            if (conn?.level > -1 ||
+            if (conn?.level >= 0 ||
                 request.path == Service.servLogin ||
                 request.path == Service.servSession)
                 response.json(await service(request))
@@ -67,7 +68,8 @@ export default class Service {
             servName.padEnd(20, ' '),
             getClientIp(request)?.replace("::ffff:", "").padEnd(15, ' '),
             size.toFixed(3).padStart(10, ' '), "kB",
-            elapse.toFixed(3).padStart(10, ' '), "sec")
+            elapse.toFixed(3).padStart(10, ' '), "sec  : ",
+            request.session?.connect?.user ? request.session.connect.user : "-")
     }
 
 }

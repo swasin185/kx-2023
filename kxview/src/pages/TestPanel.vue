@@ -8,7 +8,7 @@ export default defineComponent({
 import { ref, Ref, defineComponent, inject } from "vue"
 import Button from "primevue/button"
 import Client from "../Client"
-const dlgVerify: Ref<any> = inject("dlgVerify") || ref("")
+const dlgVerify: Ref<any> = inject("dlgVerify") || ref()
 const colorList = [
     "Crimson",
     "DarkOrange",

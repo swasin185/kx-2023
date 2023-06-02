@@ -17,6 +17,8 @@ import Client from "./Client"
 import Components from "./import"
 import LoginBox from "./components/LoginBox.vue"
 import Toast from "primevue/toast"
+import ConfirmPopup from "primevue/confirmpopup"
+
 import { ref, defineComponent, provide, onMounted } from "vue"
 
 const dlgVerify = ref<any>(null)
@@ -49,10 +51,10 @@ onMounted(() => Client.checkSession("Login"))
                             @click="Client.backPanel"
                         />
                     </div>
-                    <h1 class="col-8 text-center" style="padding: 0">
+                    <h1 class="col-8 text-center" style="padding: 5px">
                         {{ Client.getSession().comName }}
                         <br />
-                        <div style="font-size: large" v-show="Client.current.value.level > -1">
+                        <div style="font-size: large" v-show="Client.current.value.level >= 0">
                             {{ Client.current.value.pgmName }} [ {{ Client.current.value.level }} ]
                         </div>
                     </h1>
@@ -76,6 +78,7 @@ onMounted(() => Client.checkSession("Login"))
         </tr>
         <DlgVerify ref="dlgVerify" />
         <Toast position="center" />
+        <ConfirmPopup></ConfirmPopup>
     </table>
     <Dialog
         v-model:visible="Client.waitting.value"

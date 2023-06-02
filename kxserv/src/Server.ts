@@ -6,8 +6,6 @@ import fs from 'fs'
 import Library from './Library.js'
 import Service from './Service.js'
 
-console.log("LANG", process.env.LANG, new Date().toLocaleString())
-
 const workDB = process.env.APIHOST || "kxtest"
 // const nodeEnv = process.env.NODE_ENV || 'dev'
 const app = express()
@@ -43,8 +41,7 @@ const sslKey = fs.readFileSync('../cert/key.pem')
 const sslCert = fs.readFileSync('../cert/cert.pem')
 const server = https.createServer({ key: sslKey, cert: sslCert }, app)
 server.listen(Library.service.port)
-// app.listen(Library.service.port)
 
 console.info("dir:", process.cwd())
 console.info("https://" + Library.getServerIP() + ":" + Library.service.port)
-
+console.info("LANG", process.env.LANG, new Date().toLocaleString())

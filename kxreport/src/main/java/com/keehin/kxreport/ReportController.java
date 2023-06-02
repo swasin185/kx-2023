@@ -194,7 +194,7 @@ public class ReportController {
 		if (idList != null) {
 			Statement stmt = conn.createStatement();
 			stmt.execute("drop temporary table if exists idlist");
-			stmt.execute("create temporary table idlist(id varchar(100))");
+			stmt.execute("create temporary table idlist(id varchar(50))");
 			stmt.execute("insert into idlist values " + idList);
 		}
 	}

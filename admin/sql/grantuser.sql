@@ -1,6 +1,6 @@
 drop user if exists 'kxreport'@'%';
 create user 'kxreport'@'%' identified by 'kxreport';
-grant select, execute on *.* to 'kxreport'@'%';
+grant select, execute, create temporary tables on *.* to 'kxreport'@'%';
 
 drop user if exists 'kxserv'@'%';
 create user 'kxserv'@'%' identified by 'kxserv';

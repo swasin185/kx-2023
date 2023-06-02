@@ -1,39 +1,18 @@
-drop database payroll;
-create database payroll;
-use payroll;
-
 set foreign_key_checks = 0;
-
--- kxview/src/Library.ts
--- drop table if exists kxlevel;
--- create table kxlevel (
---   level         smallint unsigned not null,
---   descript      varchar(32) default "สิทธิการใช้งาน",
---   primary key (level)
--- ) comment = 'ระดับการใช้งาน';
--- insert into kxlevel values (0, "Read Only");
--- insert into kxlevel values (1, "Routine User");
--- insert into kxlevel values (2, "Simple User");
--- insert into kxlevel values (3, "Advance User");
--- insert into kxlevel values (4, "Supervisor");
--- insert into kxlevel values (5, "Manager");
--- insert into kxlevel values (6, "Administrator");
--- insert into kxlevel values (7, "Programmer");
--- insert into kxlevel values (8, "Developer");
--- insert into kxlevel values (9, "GOD");
 
 drop table if exists kxuser;
 create table kxuser (
-  user          varchar(16) not null,
-  name          varchar(40) default null,
-  descript      varchar(60) default null,
-  level         smallint unsigned not null default 0,
-  role          varchar(16) default null,
-  passwd        varchar(32) default null,
-  passwdTime    timestamp default null,
-  passwd2       varchar(32) default null,
-  passwd2Time   timestamp default null,
-  created       date default curdate(),
+  user          varchar(16),
+  name          varchar(40) comment "ชื่อ นามสกุล",
+  descript      varchar(60) comment "คำอธิบายหน้าที่",
+  level         tinyint not null default 0 comment "ระดับการใช้งานทั่วไป",
+  role          varchar(16) comment "หน้าที่",
+  passwd        varchar(32) comment "รหัสผ่านเข้าใช้งาน",
+  passwdTime    timestamp comment "วันที่ตั้งรหัสผ่าน",
+  passwd2       varchar(32) comment "รหัสผ่านซุปเปอร์ไวเซอร์",
+  passwd2Time   timestamp comment "วันที่ตั้งรหัสผ่าน 2",
+  created       date default curdate() comment "วันที่สร้างผู้ใช้",
+  stoped        date comment "วันที่สิ้นสุดการทำงาน",
   primary key (user)
 ) comment = 'ชื่อผู้ใช้งานระบบ';
 insert into kxuser(user, name, descript, level)
@@ -43,19 +22,20 @@ values ('tom', 'ทอม', 'ทดสอบผู้ใช้ทั่วไป
 
 drop table if exists kxpermission;
 create table kxpermission (
-  user          varchar(16) not null,
-  program       varchar(16) not null,
-  level         smallint unsigned not null default 0 comment 'ระดับการใช้งาน 0 - 9',
+  user          varchar(16),
+  program       varchar(16),
+  level         tinyint not null default 0 comment 'ระดับการใช้งาน 0 - 9',
   used          integer unsigned not null default 0 comment 'จำนวนครั้งที่ใช้',
   foreign key (user) references kxuser(user) on delete cascade,
   primary key (user, program)
 ) comment = 'สิทธิการใช้โปรแกรม';
 insert into kxpermission values ('tom','TestPanel',1,0);
 insert into kxpermission values ('tom','TestReport',1,0);
+insert into kxpermission values ('tom','User',1,0);
 
 drop table if exists company;
 create table company (
-  comCode       varchar(2) not null,
+  comCode       varchar(2),
   comName       varchar(64) not null comment 'บริษัท ชื่อ',
   taxid         varchar(13) comment 'เลขประจำตัวผู้เสียภาษี',
   address       varchar(100) comment 'ที่อยู่',
