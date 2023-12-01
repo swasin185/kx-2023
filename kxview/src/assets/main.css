@@ -1,16 +1,15 @@
 @import './base.css';
 
 :root {
-  --width: 1200px;
-  --height: 800px;
-  --menuwidth: 300px;
+  --width: 1080px;
+  --height: 680px;
+  --menuwidth: 250px;
 }
 
 #app {
   max-width: var(--width);
   margin: 0 auto;
   font-weight: normal;
-  /* background-color: #0F1F3F; */
   color: darkgray;
 }
 
@@ -70,7 +69,7 @@ a,
 
 .main-button {
   font-size: 1.5em;
-  width: 120px;
+  width: 100px;
   height: 100%;
   display: inline-block;
 }
@@ -87,15 +86,14 @@ a,
   height: calc(var(--height) - 105px);
   margin: 0px;
   padding: 0px;
-  /* border: 1px solid #020408; */
   background-color: #081020;
   border-radius: 5px;
 }
 
 .p-inputtext {
-  width: 180px;
-  padding: 4px;
-  margin: 0px;
+  width: 160px;
+  padding: 5px;
+  margin: 2px 0px 0px 2px;
 }
 
 .p-calendar {
@@ -111,8 +109,6 @@ a,
 }
 
 .p-panelmenu-header-action {
-  margin: 0px;
-  padding: 0px;
   max-height: 36px;
 }
 

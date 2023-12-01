@@ -5,6 +5,7 @@ import 'primevue/resources/primevue.min.css' //core css
 // import 'primevue/resources/themes/tailwind-light/theme.css'
 // import 'primevue/resources/themes/nano/theme.css'
 import 'primevue/resources/themes/soho-dark/theme.css'
+// import 'primevue/resources/themes/fluent-light/theme.css'
 
 import PrimeVue from 'primevue/config'
 import { createApp } from 'vue'
@@ -15,7 +16,7 @@ import ConfirmationService from 'primevue/confirmationservice';
 import './assets/main.css'
 
 const app = createApp(App)
-app.use(PrimeVue)
 app.use(ToastService)
 app.use(ConfirmationService);
+app.use(PrimeVue);
 app.mount('#app')

@@ -50,6 +50,7 @@
   }
 }
 
+/*
 *,
 *::before,
 *::after {
@@ -58,7 +59,7 @@
   position: relative;
   font-weight: normal;
 }
-
+*/
 body {
   background: black;
   /* transition: color 0.5s, background-color 0.5s; */
