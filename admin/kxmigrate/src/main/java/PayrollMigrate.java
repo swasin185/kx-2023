@@ -8,7 +8,7 @@ public class PayrollMigrate {
 		System.out.println("connect derby " + db);
 		try {
 			DriverManager.registerDriver(new org.apache.derby.jdbc.EmbeddedDriver());
-			return DriverManager.getConnection("jdbc:derby:/khgroup/payroll/" + db + ";create=false");
+			return DriverManager.getConnection("jdbc:derby:/archive/payroll/" + db + ";create=false");
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			return null;
@@ -19,7 +19,7 @@ public class PayrollMigrate {
 		System.out.println("connect mariadb " + db);
 		try {
 			DriverManager.registerDriver(new org.mariadb.jdbc.Driver());
-			return DriverManager.getConnection("jdbc:mysql://localhost:3306/" + db, "kxadmin", "kxadmin");
+			return DriverManager.getConnection("jdbc:mysql://localhost:3306/" + db, "payroll", "payroll");
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			return null;

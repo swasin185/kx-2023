@@ -1,3 +1,7 @@
+-- sudo mysql
+drop database if exists kxtest;
+create database kxtest;
+
 drop user if exists 'kxreport'@'%';
 create user 'kxreport'@'%' identified by 'kxreport';
 grant select, execute, create temporary tables on *.* to 'kxreport'@'%';
@@ -9,6 +13,3 @@ grant select, execute, insert, delete, update, create temporary tables on *.* to
 drop user if exists 'kxadmin'@'%';
 create user 'kxadmin'@'%' identified by 'kxadmin';
 grant all on *.* to 'kxadmin'@'%';
-
-drop database if exists kxtest;
-create database kxtest;

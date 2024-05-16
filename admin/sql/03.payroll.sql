@@ -1,3 +1,12 @@
+drop database if exists payroll;
+create database payroll;
+
+drop user if exists 'payroll'@'localhost';
+create user 'payroll'@'localhost' identified by 'payroll';
+grant select, execute, insert, delete, update, create temporary tables on payroll.* to 'payroll'@'localhost';
+
+use payroll;
+
 set foreign_key_checks = 0;
 drop table if exists deduction;
 create table deduction (

@@ -35,7 +35,6 @@ public class AttExport {
 // AttExport.insert02=insert into EMP ?;
 // AttExport.update01=update ATTTIME set Date = SUBSTR(CheckTime,1,10), Time = SUBSTR(CheckTime,12,8);
 
-
 	public static void main(String[] args) {
 		try {
 			// String mdb = "C:/Program Files/Att2008/ATT2000.MDB";
