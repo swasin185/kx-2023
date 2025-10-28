@@ -1,5 +1,6 @@
 
 import java.sql.*;
+
 /**
  * Mirate DB from derby Java Application to kxpayroll
  */
@@ -8,7 +9,7 @@ public class PayrollMigrate {
 		System.out.println("connect derby " + db);
 		try {
 			DriverManager.registerDriver(new org.apache.derby.jdbc.EmbeddedDriver());
-			return DriverManager.getConnection("jdbc:derby:/archive/payroll/" + db + ";create=false");
+			return DriverManager.getConnection("jdbc:derby:/home/tom/payroll/" + db + ";create=false");
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			return null;
@@ -19,7 +20,7 @@ public class PayrollMigrate {
 		System.out.println("connect mariadb " + db);
 		try {
 			DriverManager.registerDriver(new org.mariadb.jdbc.Driver());
-			return DriverManager.getConnection("jdbc:mysql://localhost:3306/" + db, "payroll", "payroll");
+			return DriverManager.getConnection("jdbc:mysql://localhost:3306/" + db, "admin", "tommy");
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			return null;
@@ -36,9 +37,12 @@ public class PayrollMigrate {
 		destStmt.execute("start transaction");
 		ResultSet rs = sourceStmt.executeQuery("select * from COMPANY");
 		if (rs.next()) {
-			destStmt.executeUpdate("insert into company(comCode,comName,taxid,address,yr,mo) values ('" + comCode + "','"
-					+ rs.getString("NAME") + "','" + rs.getString("TAXID") + "','" + rs.getString("ADDRESS") + "',"
-					+ rs.getString("YR") + "," + rs.getString("MN") + ")" );
+			records = destStmt.executeUpdate(
+					"insert into company(comCode,comName,taxid,address,yrPayroll,mnPayroll) values ('" + comCode + "','"
+							+ rs.getString("NAME") + "','" + rs.getString("TAXID") + "','" + rs.getString("ADDRESS")
+							+ "',"
+							+ rs.getString("YR") + "," + rs.getString("MN") + ")");
+			System.out.println("company\t" + records + " records");
 		}
 
 		rs.close();
@@ -77,7 +81,7 @@ public class PayrollMigrate {
 		System.out.println(records + " records");
 		ptmt.close();
 		rs.close();
-		
+
 		ptmt = destConn.prepareStatement("insert into salary value(?,?,?,?,?)");
 		rs = sourceStmt.executeQuery("select * from PAYROLLSETUP");
 		System.out.print(">> salary\t");
@@ -146,7 +150,7 @@ public class PayrollMigrate {
 			records++;
 		}
 		System.out.println(records + " records");
-		
+
 		destStmt.execute("commit");
 		destStmt.execute("set foreign_key_checks = 1");
 		sourceConn.close();
@@ -165,9 +169,10 @@ public class PayrollMigrate {
 			PayrollMigrate.migrate("kws", "payroll", "05");
 			PayrollMigrate.migrate("kct", "payroll", "06");
 			System.out.println("----------------------------------------------------------");
-			records =  0;
+			records = 0;
 			Connection destConn = PayrollMigrate.getMariaDBConnect("payroll");
-			PreparedStatement ptmt = destConn.prepareStatement("update employee set scanCode=? where comCode=? and empCode=?");
+			PreparedStatement ptmt = destConn
+					.prepareStatement("update employee set scanCode=? where comCode=? and empCode=?");
 			Statement destStmt = destConn.createStatement();
 			destStmt.execute("start transaction");
 			System.out.print("update scanCode ");
