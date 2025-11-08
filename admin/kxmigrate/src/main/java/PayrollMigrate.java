@@ -34,7 +34,7 @@ public class PayrollMigrate {
 		Statement destStmt = destConn.createStatement();
 		Statement sourceStmt = sourceConn.createStatement();
 		destStmt.execute("set foreign_key_checks = 0");
-		destStmt.execute("start transaction");
+		// destStmt.execute("start transaction");
 		ResultSet rs = sourceStmt.executeQuery("select * from COMPANY");
 		if (rs.next()) {
 			records = destStmt.executeUpdate(
@@ -42,13 +42,13 @@ public class PayrollMigrate {
 							+ rs.getString("NAME") + "','" + rs.getString("TAXID") + "','" + rs.getString("ADDRESS")
 							+ "',"
 							+ rs.getString("YR") + "," + rs.getString("MN") + ")");
-			System.out.println("company\t" + records + " records");
+			System.out.println(">>company\t" + records + " records");
 		}
 
 		rs.close();
 
 		PreparedStatement ptmt = destConn.prepareStatement(
-				"insert into employee value(?,?,?,?,?,?,null,0,?,null,?, ?,?,?,null,null,?,?,?,?,?, ?,?,?,?)");
+				"insert into employee value(?,?,?,?,?, ?,null,?,null, null, ?, ?,?,?,null, null,?,?,?,?, ?, ?,?,?,?)");
 		rs = sourceStmt.executeQuery("select * from EMPLOYEE");
 		System.out.print(">> employee\t");
 		records = 0;
@@ -114,7 +114,7 @@ public class PayrollMigrate {
 		System.out.println(records + " records");
 		ptmt.close();
 		rs.close();
-		destStmt.execute("commit");
+		// destStmt.execute("commit");
 		destStmt.execute("set foreign_key_checks = 1");
 		sourceConn.close();
 		destConn.close();
@@ -135,7 +135,6 @@ public class PayrollMigrate {
 		Statement sourceStmt = sourceConn.createStatement();
 		ResultSet rs = sourceStmt.executeQuery("select * from INCOME");
 		PreparedStatement ptmt = destConn.prepareStatement("insert into incometype value(?,?,?,?,?,?,?)");
-		destStmt.execute("start transaction");
 		System.out.print(">> incometype\t");
 		records = 0;
 		while (rs.next()) {
@@ -151,7 +150,6 @@ public class PayrollMigrate {
 		}
 		System.out.println(records + " records");
 
-		destStmt.execute("commit");
 		destStmt.execute("set foreign_key_checks = 1");
 		sourceConn.close();
 		destConn.close();

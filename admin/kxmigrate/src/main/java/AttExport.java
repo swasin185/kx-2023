@@ -7,6 +7,7 @@ import java.nio.channels.FileChannel;
 import java.sql.*;
 import java.util.Calendar;
 import java.util.Locale;
+
 /**
  * Att2000 Finger Print Time Scanner Export Data
  */
@@ -28,12 +29,17 @@ public class AttExport {
 		}
 	}
 
-// AttExport.query01=select userinfo.BadgeNumber, CHECKINOUT.CHECKTIME AS 'DATETIME', null AS 'Date', null AS 'Time' from userinfo, checkinout where checktime between ? and ?+1 and userinfo.att=1 and userinfo.userid=checkinout.userid
-// AttExport.query02=select BadgeNumber, name from userinfo where userinfo.att=1
-// AttExport.create01=create table if not exists atttime (BadgeNumber varchar(6), DayOfYear smallint, CheckTime Time)
-// AttExport.insert01=insert into ATTTIME ?;
-// AttExport.insert02=insert into EMP ?;
-// AttExport.update01=update ATTTIME set Date = SUBSTR(CheckTime,1,10), Time = SUBSTR(CheckTime,12,8);
+	// AttExport.query01=select userinfo.BadgeNumber, CHECKINOUT.CHECKTIME AS
+	// 'DATETIME', null AS 'Date', null AS 'Time' from userinfo, checkinout where
+	// checktime between ? and ?+1 and userinfo.att=1 and
+	// userinfo.userid=checkinout.userid
+	// AttExport.query02=select BadgeNumber, name from userinfo where userinfo.att=1
+	// AttExport.create01=create table if not exists atttime (BadgeNumber
+	// varchar(6), DayOfYear smallint, CheckTime Time)
+	// AttExport.insert01=insert into ATTTIME ?;
+	// AttExport.insert02=insert into EMP ?;
+	// AttExport.update01=update ATTTIME set Date = SUBSTR(CheckTime,1,10), Time =
+	// SUBSTR(CheckTime,12,8);
 
 	public static void main(String[] args) {
 		try {
